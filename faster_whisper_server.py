@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from transcribe import Transcriber
+from blibli_download import download_bilibili_video
+from openai_api import summarize_text
 import os
 import logging
 
@@ -19,6 +21,17 @@ UPLOAD_FOLDER = './download'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+@app.route("/online_download")
+def online_video_file():
+    online_url = request.args.get('online_url')
+    video_path, audio_path = download_bilibili_video(online_url)
+    response = {
+        'video_path': video_path,
+        'audio_path': audio_path
+    }
+    return jsonify(response), 200
 
 
 @app.errorhandler(Exception)
@@ -50,6 +63,16 @@ def upload_audio():
 def video_file():
     file_path = request.args.get('file_path')
     return send_file(file_path, mimetype='video/mp4')
+
+
+@app.route("/summary", methods=['POST'])
+def summary():
+    data = request.json
+    txt_content = data.get('txt_content').replace(r'<br/>', ' ')
+    max_tokens = data.get('max_tokens')
+    if(txt_content == ""):
+        return ""
+    return summarize_text(txt_content, max_tokens)
 
 
 @app.route("/sub")

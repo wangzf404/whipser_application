@@ -81,7 +81,6 @@ class Transcriber:
         try:
             if not os.path.exists(file_path):
                 raise ValueError(f"No {file_path} found in current path.")
-                return ''
             file_name = Path(file_path)
             all_text, results = self.transcribe(
                 str(file_name), language, word_timestamps, use_translator)

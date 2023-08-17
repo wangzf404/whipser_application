@@ -104,7 +104,7 @@ export default {
         },
         // 获取字幕内容
         getSubtitleContent(sub_path) {
-            axios.get(this.baseUrl + '/sub?sub_path=' + (sub_path.replace('.mp4', '.vtt')))
+            axios.get(this.baseUrl + '/sub?sub_path=' + sub_path.replace(/\.[^.]+$/, '.vtt'))
                 .then(response => {
                     this.reloadPlyr(sub_path, URL.createObjectURL(new Blob([response.data], { type: 'text/vtt' })))
                 })
