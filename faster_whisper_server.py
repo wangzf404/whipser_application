@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from transcribe import Transcriber
-from blibli_download import download_bilibili_video
+from online_download import download_bilibili_video,download_youtube_video
 from openai_api import summarize_text
 import os
 import logging
@@ -25,11 +25,16 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/online_download")
 def online_video_file():
+    video_path = None
     online_url = request.args.get('online_url')
-    video_path, audio_path = download_bilibili_video(online_url)
+    if "bilibili.com" in online_url:
+        video_path = download_bilibili_video(online_url)
+    elif "youtube.com" in online_url:
+        video_path = download_youtube_video(online_url)
+    else:
+        raise ValueError(f"视频格式错误.") 
     response = {
         'video_path': video_path,
-        'audio_path': audio_path
     }
     return jsonify(response), 200
 
@@ -47,7 +52,8 @@ def handle_exception(error):
 def upload_audio():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'})
-
+    if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
     file = request.files['file']
     if file.filename == '':
         return jsonify({'error': 'No selected file'})

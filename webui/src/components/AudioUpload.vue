@@ -71,16 +71,25 @@ export default {
             uploadUrl: '',
             loading: false,
             txt_content: '',
+
+            url: this.baseUrl
         };
     },
     components: {
         Plyr
     },
     created() {
-        this.uploadUrl = this.baseUrl + '/upload_file'
+        this.uploadUrl = this.url + '/upload_file'
     },
     mounted() {
         this.initPlyr();
+    },
+    watch: {
+        baseUrl(newVal) {
+            console.log(newVal)
+            this.url = newVal;
+            this.uploadUrl = this.url + '/upload_file';
+        }
     },
     methods: {
         initPlyr() {
@@ -104,7 +113,7 @@ export default {
         },
         // 获取字幕内容
         getSubtitleContent(sub_path) {
-            axios.get(this.baseUrl + '/sub?sub_path=' + sub_path.replace(/\.[^.]+$/, '.vtt'))
+            axios.get(this.url + '/sub?sub_path=' + sub_path.replace(/\.[^.]+$/, '.vtt'))
                 .then(response => {
                     this.reloadPlyr(sub_path, URL.createObjectURL(new Blob([response.data], { type: 'text/vtt' })))
                 })
@@ -117,7 +126,7 @@ export default {
                 type: 'video',
                 sources: [
                     {
-                        src: this.baseUrl + '/video?file_path=' + videoUrl,
+                        src: this.url + '/video?file_path=' + videoUrl,
                         type: 'video/mp4',
                     },
                 ],
@@ -157,7 +166,7 @@ export default {
                         translator: this.form.translator
                     };
                     this.loading = true;
-                    axios.post(this.baseUrl + '/transcription', formData)
+                    axios.post(this.url + '/transcription', formData)
                         .then(response => {
                             this.txt_content = response.data.txt_content.replace(/\n/g, '<br/>');
                             this.getSubtitleContent(this.filePath)
@@ -177,8 +186,8 @@ export default {
 };
 </script>
 <style>
-    .plyr {
-      max-width: 100%;
-      max-height: 100vh;
-    }
+.plyr {
+    max-width: 100%;
+    max-height: 100vh;
+}
 </style>

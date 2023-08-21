@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="input-container">
-          <el-input v-model="videoUrl" placeholder="请输入 bilibili 视频链接"></el-input>
+          <el-input v-model="videoUrl" placeholder="请输入 bilibili/youtube 视频链接"></el-input>
           <el-button type="primary" @click="parseVideo" style="margin-left: 20px;">解析</el-button>
         </div>
       </el-col>
@@ -59,7 +59,6 @@ export default {
       loading: false,
       sum_content: '',
       video_path: '',
-      audio_path: '',
 
       language: 'auto',
       use_large: false,
@@ -105,7 +104,6 @@ export default {
       axios.get(this.baseUrl + '/online_download?online_url=' + this.videoUrl)
         .then(response => {
           this.video_path = response.data.video_path;
-          this.audio_path = response.data.audio_path;
           this.submitForm(this.video_path)
         })
         .catch(error => {

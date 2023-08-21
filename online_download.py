@@ -4,11 +4,36 @@ import json
 import subprocess
 import os
 import logging
+import pytube
 
 # 设置日志级别为ERROR
 logging.basicConfig(level=logging.ERROR)
 UPLOAD_FOLDER = './download/blibli/'
 
+def download_youtube_video(url):
+    try:
+        # 创建保存视频的文件夹
+        if not os.path.exists(UPLOAD_FOLDER):
+            os.makedirs(UPLOAD_FOLDER)
+
+        try:
+            video_yt = pytube.YouTube(url)
+        except Exception:
+            raise(RuntimeError(f"{url} isn't recgnized."))
+        try:
+            video_yt.check_availability()
+        except pytube.exceptions.VideoUnavailable:
+            raise(RuntimeError(f"{url} isn't available."))
+
+        video_streams = video_yt.streams.filter(
+            type="video", mime_type="video/mp4", res="720p")
+        video_streams.first().download(
+            output_path=UPLOAD_FOLDER,
+            filename=video_yt.video_id+".mp4"
+        )
+        return UPLOAD_FOLDER + video_yt.video_id+".mp4"
+    except Exception:
+        logging.exception("Failed")
 
 def download_bilibili_video(url):
     try:
@@ -59,7 +84,7 @@ def download_bilibili_video(url):
         # 使用FFmpeg合并音频和视频
         command = f'ffmpeg -i {video_temp_path} -i {audio_path} -c:v copy -c:a copy {video_path}'
         subprocess.call(command, shell=True)
-        return video_path, audio_path
+        return video_path
     except Exception:
         logging.exception("Failed")
 

@@ -3,14 +3,14 @@
     <el-header>音视频转录工具</el-header>
     <el-main>
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="12">
           <span>基础地址: </span>
-          <el-input v-model="baseUrl" placeholder="请输入地址" style="display: inline-block; width: 200px;"></el-input>
+          <el-input v-model="baseUrl" placeholder="请输入地址" style="display: inline-block; width: 400px;"></el-input>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="12">
           <span>WebSocket: </span>
           <el-input v-model="WebSocketUrl" placeholder="请输入WebSocket地址"
-            style="display: inline-block; width: 200px;"></el-input>
+            style="display: inline-block; width: 400px;"></el-input>
         </el-col>
       </el-row>
       <el-tabs v-model="activeName" @tab-click="handleClick">
