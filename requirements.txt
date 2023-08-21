@@ -1,0 +1,24 @@
+faster_whisper==0.6.0
+ffmpeg==1.4
+ffmpeg_python==0.2.0
+# Flask==2.2.2
+Flask==2.3.2
+Flask_Cors==4.0.0
+googletrans==4.0.0rc1
+openai==0.27.8
+openai_whisper==20230314
+pydub==0.25.1
+pysubs2==1.6.1
+pytube==15.0.0
+Requests==2.31.0
+soundfile==0.12.1
+# SoundFile==0.10.3.post1
+SpeechRecognition==3.10.0
+# torch==1.12.1
+torch==2.0.1
+# torch==1.13.1
+# tqdm==4.64.1
+tqdm==4.65.0
+websockets==11.0.3
+zhconv==1.4.3
+# ~oundfile==0.12.1
